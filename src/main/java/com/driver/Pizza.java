@@ -3,92 +3,98 @@ package com.driver;
 public class Pizza {
 
     private int price;
-    private int totalPrice;
     private Boolean isVeg;
-    private String bill = "";
-    private int extraCheese;
-    private int extraToppings;
-    private int paperBag;
+    private String bill;
 
-    public void setVeg(Boolean veg) {
-        this.isVeg = veg;
-    }
+    private boolean exChees = false;
+    private boolean exTopingVeg = false;
+    private boolean exTopingNonVeg = false;
+    private boolean bagData = false;
 
-    Boolean cheeseAdded = false;
-    Boolean toppingsAdded = false;
-    Boolean bagAdded = false;
+    final int vegPizza = 300;
+    final int nonVegPizza = 400;
+    final int extraCheesePrice = 80;
+    final int exTopingsPriceVeg = 70;
+    final int exTopingsPriceNonVeg = 120;
+    final int bag = 20;
 
+    public Pizza(Boolean isVeg) {
 
-    public Pizza(Boolean isVeg){
         this.isVeg = isVeg;
-        // your code goes here
-        if(isVeg){
+        if (isVeg) {
             this.price = 300;
-            totalPrice += price;
-        }
-        else {
+        } else {
             this.price = 400;
-            totalPrice += price;
+
         }
+
     }
 
-    public int getPrice(){
+    public int getPrice() {
+
         return this.price;
     }
 
-    public void addExtraCheese(){
-        // your code goes here
-        extraCheese += 80;
-        cheeseAdded = true;
+    public void addExtraCheese() {
 
-        totalPrice += extraCheese;
-        cheeseAdded = true;
-    }
+        if (!exChees) {
+            this.price = this.price + extraCheesePrice;
+            exChees = true;
 
-
-    public void addExtraToppings(){
-        // your code goes here
-        if(isVeg){
-            extraToppings += 70;
-            totalPrice += extraToppings;
-            toppingsAdded = true;
         }
-        else {
-            extraToppings += 120;
-            totalPrice += extraToppings;
-            toppingsAdded = true;
+
+    }
+
+    public void addExtraToppings() {
+
+        if (!exTopingVeg && isVeg) {
+            this.price = this.price + exTopingsPriceVeg;
+            exTopingVeg = true;
+            exChees = true;
+
+        } else if (!exTopingNonVeg && !isVeg) {
+            this.price = this.price + exTopingsPriceNonVeg;
+            exTopingNonVeg = true;
+            exChees = true;
+
+        }
+
+    }
+
+    public void addTakeaway() {
+
+        if (!bagData) {
+            bagData = true;
+            this.price = this.price + bag;
         }
     }
 
+    public String getBill() {
 
-    public void addTakeaway(){
-        // your code goes here
-        bagAdded = true;
-        paperBag += 20;
+        if (isVeg) {
+            this.bill = "Base Price Of The Pizza: " + vegPizza + "\n";
+        } else {
+            this.bill = "Base Price Of The Pizza: " + nonVegPizza + "\n";
 
-        totalPrice += paperBag;
-    }
+        }
 
-    public String getBill(){
-        // your code goes here
-        System.out.println("Base Price Of The Pizza: " + this.price);
+        if (exChees) {
+            this.bill = this.bill + "Extra Cheese Added: " + extraCheesePrice + "\n";
+        }
 
-        if(cheeseAdded)    System.out.println("Extra Cheese Added: "+ extraCheese);
+        if (isVeg && exTopingVeg) {
+            this.bill = this.bill + "Extra Toppings Added: " + exTopingsPriceVeg + "\n";
+        } else if (!isVeg && exTopingNonVeg) {
+            this.bill = this.bill + "Extra Toppings Added: " + exTopingsPriceNonVeg + "\n";
 
-        if(toppingsAdded)  System.out.println("Extra Toppings Added: " + extraToppings);
+        }
 
-        if(bagAdded)       System.out.println("Paperbag Added: "+ paperBag);
+        if (bagData) {
+            this.bill = this.bill + "Paperbag Added: " + bag + "\n";
+        }
 
-        bill += totalPrice;
-        System.out.print("Total Price: ");
+        this.bill = this.bill + "Total Price: " + this.price + "\n";
 
         return this.bill;
     }
 }
-
-  /*
-
-        Extra Toppings Added: 70
-        Paperbag Added: 20
-        Total Price: 470
-*/
